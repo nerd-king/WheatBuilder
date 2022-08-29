@@ -1,6 +1,6 @@
 #include "pch.h"
 #include <EventAPI.h>
-#include <LoggerAPI.h>
+
 #include <MC/Level.hpp>
 #include <MC/BlockInstance.hpp>
 #include <MC/Block.hpp>
@@ -23,6 +23,7 @@
 #include <MC/Types.hpp>
 #include <direct.h>
 
+#include "Config.h"
 #include "BiomeManager.h"
 #include "CommandManager.h"
 
@@ -33,7 +34,7 @@
  *  Author      :  ENIAC_Jushi             *
 \* --------------------------------------- */
 
-Logger logger(PLUGIN_NAME);
+
 
 inline void CheckProtocolVersion() {
 #ifdef TARGET_BDS_PROTOCOL_VERSION
@@ -47,19 +48,20 @@ inline void CheckProtocolVersion() {
 #endif // TARGET_BDS_PROTOCOL_VERSION
 }
 
+
+
 void PluginInit()
 {
-    if (_access("plugins/WheatBuilder", 0) != 0) {
-        if (!_mkdir("plugins/WheatBuilder")) logger.fatal("Dir \"plugins/WheatBuilder\" make failed.");
-    }
-    if (_access("plugins/WheatBuilder/Biomes", 0) != 0) {
-        if (!_mkdir("plugins/WheatBuilder/Biomes")) logger.fatal("Dir \"plugins/WheatBuilder/Biomes\" make failed.");
-    }
+    FileTool::makeDir("plugins/WheatBuilder");
+    FileTool::makeDir("plugins/WheatBuilder/Biomes");
+    FileTool::makeDir("plugins/WheatBuilder/Chunks");
+    config.load("plugins/WheatBuilder/Config.json");
+    
     Event::RegCmdEvent::subscribe([](Event::RegCmdEvent ev) {
-        regCommand();
+        CommandManager::set();
         return true;
         });
     CheckProtocolVersion();
-    logger.info("WheatBuilder: BiomeEditor loaded.");
+    logger.info("WheatBuilder: BiomeEditor and MoveChunk loaded.");
 }
 

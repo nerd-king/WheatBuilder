@@ -15,12 +15,7 @@
 #include <MC/BlockPos.hpp>
 #include <MC/ChunkBlockPos.hpp>
 
-std::pair<ChunkPos*, ChunkBlockPos> block2chunkPos(int x, int y, int z) {
-	ChunkPos* chunk = new ChunkPos(floor((double)x / 16), floor((double)z / 16));
-	ChunkBlockPos block(x - chunk->x * 16, y, z - chunk->z * 16);
-	// std::cout << x << " " << y << "" << z << ":" << chunk->x << " " << chunk->z << " ." << block.x << " " << " " << block.y << block.z << std::endl;
-	return std::pair(chunk, block);
-}
+#include "Tools.h"
 
 class BiomeManager
 {
@@ -28,7 +23,7 @@ public:
 	// For single block
 	static int    getBiomeId(int x, int y, int z, int dim_id) {
 		try {
-			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = block2chunkPos(x, y, z);
+			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = PositionTool::block2chunkPos(x, y, z);
 
 			std::shared_ptr<class LevelChunk> levelChunk = Global<Level>->getDimension(
 				AutomaticID<Dimension, int>(dim_id))->getChunkSource().getExistingChunk(*chunkPos.first);
@@ -46,7 +41,7 @@ public:
 	}
 	static string getBiomeName(int x, int y, int z, int dim_id) {
 		try {
-			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = block2chunkPos(x, y, z);
+			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = PositionTool::block2chunkPos(x, y, z);
 
 			std::shared_ptr<class LevelChunk> levelChunk = Global<Level>->getDimension(
 				AutomaticID<Dimension, int>(dim_id))->getChunkSource().getExistingChunk(*chunkPos.first);
@@ -64,7 +59,7 @@ public:
 	}
 	static std::pair<int, string> getbiomeIdAndName(int x, int y, int z, int dim_id) {
 		try {
-			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = block2chunkPos(x, y, z);
+			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = PositionTool::block2chunkPos(x, y, z);
 
 			std::shared_ptr<class LevelChunk> levelChunk = Global<Level>->getDimension(
 				AutomaticID<Dimension, int>(dim_id))->getChunkSource().getExistingChunk(*chunkPos.first);
@@ -83,7 +78,7 @@ public:
 	}
 	static string   setBiomeById(int x, int y, int z, int dim_id, int biome_id) {
 		try {
-			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = block2chunkPos(x, y, z);
+			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = PositionTool::block2chunkPos(x, y, z);
 
 			std::shared_ptr<class LevelChunk> levelChunk = Global<Level>->getDimension(
 				AutomaticID<Dimension, int>(dim_id))->getChunkSource().getExistingChunk(*chunkPos.first);
@@ -103,7 +98,7 @@ public:
 	}
 	static int   setBiomeByName(int x, int y, int z, int dim_id, string biome_name) {
 		try {
-			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = block2chunkPos(x, y, z);
+			std::pair<ChunkPos*, ChunkBlockPos> chunkPos = PositionTool::block2chunkPos(x, y, z);
 
 			std::shared_ptr<class LevelChunk> levelChunk = Global<Level>->getDimension(
 				AutomaticID<Dimension, int>(dim_id))->getChunkSource().getExistingChunk(*chunkPos.first);
@@ -171,8 +166,8 @@ public:
 				}
 				biomeIds.push_back(temp_x);
 			}
-			std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = block2chunkPos(start_x, start_y, start_z);
-			std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = block2chunkPos(end_x, end_y, end_z);
+			std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = PositionTool::block2chunkPos(start_x, start_y, start_z);
+			std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = PositionTool::block2chunkPos(end_x, end_y, end_z);
 			for (int chunk_x = startChunkPos.first->x; chunk_x <= endChunkPos.first->x; chunk_x++) {
 				for (int chunk_z = startChunkPos.first->z; chunk_z <= endChunkPos.first->z; chunk_z++) {
 					int chunk_start_x = 0;
@@ -221,8 +216,8 @@ public:
 		int end_z = start_z + z_offset;
 		int end_y = start_y + y_offset;
 
-		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = block2chunkPos(start_x, start_y, start_z);
-		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = block2chunkPos(end_x, end_y, end_z);
+		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = PositionTool::block2chunkPos(start_x, start_y, start_z);
+		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = PositionTool::block2chunkPos(end_x, end_y, end_z);
 		for (int chunk_x = startChunkPos.first->x; chunk_x <= endChunkPos.first->x; chunk_x++) {
 			for (int chunk_z = startChunkPos.first->z; chunk_z <= endChunkPos.first->z; chunk_z++) {
 				int chunk_start_x = 0;
@@ -300,8 +295,8 @@ public:
 		int z_offset = end_z - start_z + 1;
 
 
-		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = block2chunkPos(start_x, start_y, start_z);
-		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = block2chunkPos(end_x, end_y, end_z);
+		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = PositionTool::block2chunkPos(start_x, start_y, start_z);
+		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = PositionTool::block2chunkPos(end_x, end_y, end_z);
 		for (int chunk_x = startChunkPos.first->x; chunk_x <= endChunkPos.first->x; chunk_x++) {
 			for (int chunk_z = startChunkPos.first->z; chunk_z <= endChunkPos.first->z; chunk_z++) {
 				int chunk_start_x = 0;
@@ -372,8 +367,8 @@ public:
 		int z_offset = end_z - start_z + 1;
 
 
-		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = block2chunkPos(start_x, start_y, start_z);
-		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = block2chunkPos(end_x, end_y, end_z);
+		std::pair<ChunkPos*, ChunkBlockPos> startChunkPos = PositionTool::block2chunkPos(start_x, start_y, start_z);
+		std::pair<ChunkPos*, ChunkBlockPos> endChunkPos = PositionTool::block2chunkPos(end_x, end_y, end_z);
 		for (int chunk_x = startChunkPos.first->x; chunk_x <= endChunkPos.first->x; chunk_x++) {
 			for (int chunk_z = startChunkPos.first->z; chunk_z <= endChunkPos.first->z; chunk_z++) {
 				int chunk_start_x = 0;
